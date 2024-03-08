@@ -409,7 +409,7 @@ public partial class MainPage : ContentPage
                 nextTask = RaceTo21.Task.Intro;
                 DoNextTask();
             }
-            DoNextTask();
+            DoNextTask(); // goes back to do next task
         }
     }
 
