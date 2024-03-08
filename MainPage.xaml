@@ -97,11 +97,11 @@
         <AbsoluteLayout>
             <HorizontalStackLayout x:Name = "Player1" AbsoluteLayout.LayoutBounds="10,10">
                 <Label 
-                    Text="" 
-                    x:Name="PlayersNames1"
-                    FontSize="18" 
-                    IsVisible="false"
-                    Padding="10"/>
+                Text="" 
+                x:Name="PlayersNames1"
+                FontSize="18" 
+                IsVisible="false"
+                Padding="10"/>
 
             </HorizontalStackLayout>
             <HorizontalStackLayout x:Name= "Player2" AbsoluteLayout.LayoutBounds="600,10">
@@ -123,6 +123,9 @@
             Padding="10"/>
             </HorizontalStackLayout>
         </AbsoluteLayout>
+
+
+
         <Label 
     Text="" 
     x:Name="PlayersNames4"

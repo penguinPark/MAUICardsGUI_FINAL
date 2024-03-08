@@ -118,6 +118,7 @@ public partial class MainPage : ContentPage
         }
         else if (nextTask == RaceTo21.Task.FirstTurn)
         {
+          
             NonScoreButton.IsVisible = false;
             DrawScoreButton.IsVisible = true;
             DrawCard.IsVisible = true;
@@ -198,7 +199,7 @@ public partial class MainPage : ContentPage
                         }
                     }
                 }
-            }
+            } FirstCard();
         }
         else if (nextTask == RaceTo21.Task.PlayerTurn)
         {
@@ -416,7 +417,7 @@ public partial class MainPage : ContentPage
     {
         nextTask = RaceTo21.Task.FirstTurn;
         DoNextTask();
-        FirstCard();
+        //FirstCard();
     }
 
     private void DrawScoreButton_Clicked(object sender, EventArgs e)
@@ -578,6 +579,13 @@ public partial class MainPage : ContentPage
         deck.Shuffle(); // shuffles deck
         Status.Text = "";
         count = 0;
+        for(int i = 1; i <= players.Count; i++)
+        {
+            var delete = this.FindByName($"Player{i}") as HorizontalStackLayout;
+            Microsoft.Maui.Controls.Label label = (Label)delete[0];
+            delete.Clear();
+            delete.Add(label);
+        }
     }
 
     private void FinalButton_Clicked(object sender, EventArgs e)
@@ -782,7 +790,7 @@ public partial class MainPage : ContentPage
         for (int i = 1; i <= players.Count; i++)
         {
             var addToMe = this.FindByName($"Player{i}") as HorizontalStackLayout;
-            Card card = players[count].cards[players[count].cards.Count - 1];
+            Card card = players[i-1].cards[0];
             switch (card.ID)
             {
                 case "AC":
