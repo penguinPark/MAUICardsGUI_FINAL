@@ -1,0 +1,318 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MAUICardsGUI.MainPage"
+             xmlns:local="clr-namespace:MAUICardsGUI">
+
+    <VerticalStackLayout
+         Spacing="25"
+         Padding="30,0"
+         VerticalOptions="Center">
+
+        <Label 
+     Text="Race To 21"
+     SemanticProperties.Description="Game title"
+     FontSize="18"
+     HorizontalOptions="Center"
+     VerticalOptions="Center"
+     IsVisible="true"
+     x:Name="gameLabel"/>
+
+
+        <Button
+    x:Name="StartButton"
+    Text="Start the Game :)"
+    SemanticProperties.Hint="Starts the game"
+    Clicked="StartButton_Clicked"
+    HorizontalOptions="Center" BackgroundColor="LightCoral"
+    IsVisible="true"/>
+
+        <Entry
+      x:Name="NumberOfPlayers"
+      Keyboard="Numeric"
+      WidthRequest="400"
+      SemanticProperties.Description="Enter the number of players who will play"
+      Placeholder="Enter the number of players (2-8 players)"
+      IsVisible="false"/>
+
+        <Button
+      x:Name="NumberPlayersButton"
+      Text="Enter :)"
+      SemanticProperties.Hint="Gets number of players"
+      Clicked="NumberPlayersButton_Clicked"
+      HorizontalOptions="Center" BackgroundColor="LightCoral"
+      IsVisible="false"/>
+
+        <Label x:Name="InvalidNumbersText" Padding="20" Text="Invalid number of players! This game is meant for 2-8 players." IsVisible="false" HorizontalOptions="Center"></Label>
+
+        <Entry
+     x:Name="NamesOfPlayers"
+     WidthRequest="200"
+     SemanticProperties.Description="Enter the names of players who will play"
+     Placeholder="Enter your name"
+     IsVisible="false"/>
+
+        <Button
+    x:Name="NameButton"
+    Text="Enter :)"
+    SemanticProperties.Hint="Gets names of players"
+    Clicked="NameButton_Clicked"
+    HorizontalOptions="Center" BackgroundColor="LightCoral"
+    IsVisible="false" />
+
+        <Label 
+    Text="Invalid Name"
+    x:Name="InvalidName"
+    FontSize="18" 
+    IsVisible="false"
+    HorizontalOptions="Center"/>
+
+        <Entry
+    x:Name="TotalWinningScore"
+    WidthRequest="500"
+    SemanticProperties.Description="Enter the total winning score of the game you want."
+    Placeholder="Enter the total winning score."
+    IsVisible="false"/>
+
+        <Button
+    x:Name="ScoreButton"
+    Text="Enter :)"
+    SemanticProperties.Hint="Gets the total winning score"
+    Clicked="ScoreButton_Clicked"
+    HorizontalOptions="Center" BackgroundColor="LightCoral"
+    IsVisible="false" />
+
+        <Label 
+    Text="Invalid Score. Number should be greater than 50 and less than 500."
+    x:Name="InvalidScore"
+    FontSize="18" 
+    IsVisible="false"
+    HorizontalOptions="Center"/>
+
+        <Label 
+    Text="Total Winning Score:" 
+    x:Name="TotalScore"
+    FontSize="30" 
+    IsVisible="false"
+    Padding="10"/>
+        <AbsoluteLayout>
+            <HorizontalStackLayout x:Name = "Player1" AbsoluteLayout.LayoutBounds="10,10">
+                <Label 
+                    Text="" 
+                    x:Name="PlayersNames1"
+                    FontSize="18" 
+                    IsVisible="false"
+                    Padding="10"/>
+
+            </HorizontalStackLayout>
+            <HorizontalStackLayout x:Name= "Player2" AbsoluteLayout.LayoutBounds="600,10">
+                <Label 
+            Text="" 
+            x:Name="PlayersNames2"
+            FontSize="18" 
+            IsVisible="false"
+            Padding="10"/>
+
+            </HorizontalStackLayout>
+            <HorizontalStackLayout x:Name= "Player3" AbsoluteLayout.LayoutBounds="10,300">
+
+                <Label 
+            Text="" 
+            x:Name="PlayersNames3"
+            FontSize="18" 
+            IsVisible="false"
+            Padding="10"/>
+            </HorizontalStackLayout>
+        </AbsoluteLayout>
+        <Label 
+    Text="" 
+    x:Name="PlayersNames4"
+    FontSize="18" 
+    IsVisible="false"
+    Padding="10"/>
+
+        <Label 
+    Text="" 
+    x:Name="PlayersNames5"
+    FontSize="18" 
+    IsVisible="false"
+    Padding="10"/>
+
+        <Label
+    Text="" 
+    x:Name="PlayersNames6"
+    FontSize="18" 
+    IsVisible="false"
+    Padding="10"/>
+
+        <Label 
+    Text="" 
+    x:Name="PlayersNames7"
+    FontSize="18" 
+    IsVisible="false"
+    Padding="10"/>
+
+        <Label 
+    Text="" 
+     x:Name="PlayersNames8"
+    FontSize="18" 
+    IsVisible="false"
+    Padding="10"/>
+
+        <Button
+    x:Name="NonScoreButton"
+    Text="Get your first cards! :)"
+    Clicked="NonScoreButton_Clicked"
+    HorizontalOptions="Center" BackgroundColor="LightCoral"
+    IsVisible="false" />
+
+        <Button
+    x:Name="DrawScoreButton"
+    Text="Draw :)"
+    Clicked="DrawScoreButton_Clicked"
+    HorizontalOptions="Center" BackgroundColor="LightCoral"
+    IsVisible="false" />
+
+        <Button
+    x:Name="StayScoreButton"
+    Text="Stay :)"
+    Clicked="StayScoreButton_Clicked"
+    HorizontalOptions="Center" BackgroundColor="LightCoral"
+    IsVisible="false" />
+
+        <Label 
+    Text="Do you want to draw a card?" 
+    x:Name="DrawCard"
+    FontSize="18" 
+    IsVisible="false"
+    HorizontalOptions="Start"/>
+
+        <Label 
+    Text="" 
+    x:Name="Status"
+    FontSize="18" 
+    IsVisible="false"
+    HorizontalOptions="Start"/>
+
+        <Label 
+    Text="" 
+    x:Name="Cardstatus"
+    FontSize="18" 
+    IsVisible="false"
+    HorizontalOptions="Start"/>
+
+        <Button
+    x:Name="NextButton"
+    Text="Next"
+    Clicked="NextButton_Clicked"
+    HorizontalOptions="Center" BackgroundColor="LightCoral"
+    IsVisible="false" />
+
+
+        <Label 
+    Text="" 
+    x:Name="FinalTotalScore"
+    FontSize="18" 
+    IsVisible="false"
+    HorizontalOptions="Start"/>
+
+        <Label 
+    Text="" 
+    x:Name="FinalTotalScore2"
+    FontSize="18" 
+    IsVisible="false"
+    HorizontalOptions="Start"/>
+
+        <Label 
+    Text="" 
+    x:Name="FinalTotalScore3"
+    FontSize="18" 
+    IsVisible="false"
+    HorizontalOptions="Start"/>
+
+        <Label 
+    Text="" 
+    x:Name="FinalTotalScore4"
+    FontSize="18" 
+    IsVisible="false"
+    HorizontalOptions="Start"/>
+
+        <Label 
+    Text="" 
+    x:Name="FinalTotalScore5"
+    FontSize="18" 
+    IsVisible="false"
+    HorizontalOptions="Start"/>
+
+        <Label 
+    Text="" 
+    x:Name="FinalTotalScore6"
+    FontSize="18" 
+    IsVisible="false"
+    HorizontalOptions="Start"/>
+
+        <Label 
+    Text="" 
+    x:Name="FinalTotalScore7"
+    FontSize="18" 
+    IsVisible="false"
+    HorizontalOptions="Start"/>
+
+        <Label 
+    Text="" 
+    x:Name="FinalTotalScore8"
+    FontSize="18" 
+    IsVisible="false"
+    HorizontalOptions="Start"/>
+
+
+        <Button
+    x:Name="FinalButton"
+    Text="Ready for the next round?"
+    Clicked="FinalButton_Clicked"
+    HorizontalOptions="Center" BackgroundColor="LightCoral"
+    IsVisible="false" />
+
+        <Label 
+    Text="" 
+    x:Name="FullWinningLabel"
+    FontSize="18" 
+    IsVisible="false"
+    HorizontalOptions="Start"/>
+
+        <Label 
+    Text="" 
+    x:Name="ContinueLabel"
+    FontSize="18" 
+    IsVisible="false"
+    HorizontalOptions="Start"/>
+
+        <Entry
+    x:Name="ContinueResponse"
+    WidthRequest="500"    
+    Placeholder="Enter Yes or No"
+    IsVisible="false"/>
+
+        <Label 
+    Text="" 
+    x:Name="ContinueYesOrNoLabel"
+    FontSize="18" 
+    IsVisible="false"
+    HorizontalOptions="Start"/>
+
+        <Button
+    x:Name="NewRoundButton"
+    Text="Next Round"
+    Clicked="NewRoundButton_Clicked"
+    HorizontalOptions="Center" BackgroundColor="LightCoral"
+    IsVisible="false" />
+
+        <Button
+    x:Name="NewgameButton"
+    Text="New Game"
+    Clicked="NewgameButton_Clicked"
+    HorizontalOptions="Center" BackgroundColor="LightCoral"
+    IsVisible="false" />
+
+    </VerticalStackLayout>
+
+</ContentPage>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="MAUICardsGUI.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MAUICardsGUI"
+    Shell.FlyoutBehavior="Disabled" BackgroundColor="LightSkyBlue"
+    Title="MAUICardsGUI">
+
+    <ShellContent
+        Title="Race to 21"
+         ContentTemplate="{DataTemplate local:MainPage}"
+        Route="MainPage" />
+    <ShellContent
+        Route="NumberPlayers"/>
+    <ShellContent
+        Title="Names of Players"
+        Route="NamePage"/>
+    <ShellContent
+        Title="Total Winning Score"
+        Route="TotalWinningScore"/>
+
+
+</Shell>
