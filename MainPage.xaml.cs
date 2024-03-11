@@ -6,9 +6,6 @@ using static System.Formats.Asn1.AsnWriter;
 namespace MAUICardsGUI;
 public partial class MainPage : ContentPage
 {
-    // need to have draw and stay work
-    // need to start new game if people want to
-    // scoring and end of game should work
     int numOfPlayers; // number of players in current game
     List<Player> players = new List<Player>(); // list of objects containing player data
     Deck deck = new Deck(); // deck of cards
@@ -16,20 +13,21 @@ public partial class MainPage : ContentPage
     public RaceTo21.Task nextTask = RaceTo21.Task.GetNumberOfPlayers; // keeps track of game state through enum Task
     Player previousWinner; // to keep track of the player who won
     public int winningScore; // variable to represent the winning total score
-    public bool finishedTask = false;
-    public string response;
-    int count; // counter
+    public bool finishedTask = false; // to see if the task is finished
+    public string response; // player's responses
+    int count; // counter for button
     int fullNumber = 0; // full winning score number
-    int numResponse; // response
-    int intro = 0;
-    List<Label> FinalScores;
+    int numResponse; // player's number response
+    int intro = 0; // for the player introduction
+    List<Label> FinalScores; // list of the labels for the final scores (was testing to see if this can shorten the amount of code)...
+
     public MainPage()
     {
         InitializeComponent();
-        FinalScores = new List<Label> { FinalTotalScore, FinalTotalScore2, FinalTotalScore3, FinalTotalScore4, FinalTotalScore5, FinalTotalScore6, FinalTotalScore7, FinalTotalScore8 };
+        FinalScores = new List<Label> { FinalTotalScore, FinalTotalScore2, FinalTotalScore3, FinalTotalScore4, FinalTotalScore5, FinalTotalScore6, FinalTotalScore7, FinalTotalScore8 }; // list of all the final score labels for every player
     }
 
-    public void DoNextTask()
+    public void DoNextTask() // this method goes through every single task throughout this game. It starts from the first button click that starts the game
     {
         if (nextTask == RaceTo21.Task.GetNumberOfPlayers) // this is to get the number of players in the game
         {
@@ -38,7 +36,7 @@ public partial class MainPage : ContentPage
             NumberOfPlayers.IsVisible = true;
             NumberPlayersButton.IsVisible = true;
         }
-        else if (nextTask == RaceTo21.Task.GetNames)
+        else if (nextTask == RaceTo21.Task.GetNames) // this is to get the names of the players in the game
         {
             InvalidNumbersText.IsVisible = false;
             NumberOfPlayers.IsVisible = false;
@@ -47,19 +45,20 @@ public partial class MainPage : ContentPage
             NamesOfPlayers.IsVisible = true;
             NameButton.IsVisible = true;
         }
-        else if (nextTask == RaceTo21.Task.AgreedScore)
+        else if (nextTask == RaceTo21.Task.AgreedScore) // this is to get everyone's preferred winning score
         {
             InvalidName.IsVisible = false;
             NamesOfPlayers.IsVisible = false;
             NameButton.IsVisible = false;
             TotalWinningScore.IsVisible = true;
             ScoreButton.IsVisible = true;
-            gameLabel.Text = "What does " + players[intro].Name + " want the winning score to be?";
+            gameLabel.Text = "What does " + players[intro].Name + " want the winning score to be? (The winning score determines who wins the full game when a player reaches " +
+                "this score after multiple rounds. The score is the average of every player's preferred winning score)";
 
         }
-        else if (nextTask == RaceTo21.Task.Intro)
+        else if (nextTask == RaceTo21.Task.Intro) // introduces all the players and their initial scores (which should be 0)
         {
-            deck.Shuffle();
+            deck.Shuffle(); // shuffles deck here
             InvalidScore.IsVisible = false;
             TotalWinningScore.IsVisible = false;
             ScoreButton.IsVisible = false;
@@ -67,7 +66,7 @@ public partial class MainPage : ContentPage
             TotalScore.IsVisible = true;
             NonScoreButton.IsVisible = true;
             TotalScore.Text = "Total Winning Score: " + winningScore;
-            while (currentPlayer < players.Count)
+            while (currentPlayer < players.Count) // this sets up the labels for up to 8 players
             {
                 PlayersNames1.IsVisible = true;
                 PlayersNames1.Text = "Player #" + (currentPlayer + 1) + " Name: " + players[currentPlayer].Name + "      Game Score: " + players[currentPlayer].score;
@@ -116,7 +115,7 @@ public partial class MainPage : ContentPage
                 }
             }
         }
-        else if (nextTask == RaceTo21.Task.FirstTurn)
+        else if (nextTask == RaceTo21.Task.FirstTurn) //This is to give every player their first card after they start the game. This is to ensure everyone gets their first card without clicking "stay" when they have no cards
         {
           
             NonScoreButton.IsVisible = false;
@@ -125,12 +124,12 @@ public partial class MainPage : ContentPage
             StayScoreButton.IsVisible = true;
             DrawCard.Text = "Do you want to draw a card " + players[intro].Name;
             currentPlayer = 0;
-            if (players[currentPlayer].cards.Count == 0)
+            if (players[currentPlayer].cards.Count == 0) // if their card count is 0... (for up to 8 players)
             {
                 while (currentPlayer < players.Count)
                 {
                     Card card = deck.DealTopCard();
-                    players[currentPlayer].cards.Add(card);
+                    players[currentPlayer].cards.Add(card); // they'll get their first card
                     players[currentPlayer].score = ScoreHand(players[currentPlayer]);
                     PlayersNames1.IsVisible = true;
                     PlayersNames1.Text = "Player #" + (currentPlayer + 1) + " Name: " + players[currentPlayer].Name + "      Game Score: " + players[currentPlayer].score;
@@ -199,28 +198,28 @@ public partial class MainPage : ContentPage
                         }
                     }
                 }
-            } FirstCard();
+            } FirstCard(); // this method was created to allow the card image of everyone's first card to pop out in the screen :).
         }
-        else if (nextTask == RaceTo21.Task.PlayerTurn)
+        else if (nextTask == RaceTo21.Task.PlayerTurn) // this is when players can choose to draw or stay
         {
             DrawScoreButton.IsVisible = true;
             StayScoreButton.IsVisible = true;
-            while (players[count].status == PlayerStatus.stay || players[count].status == PlayerStatus.bust)
+            while (players[count].status == PlayerStatus.stay || players[count].status == PlayerStatus.bust) // while the player's status is bust or stay....
             {
-                count = (count + 1) % players.Count;
-                if (!CheckActivePlayers())
+                count = (count + 1) % players.Count; // this was made to skip the player if their status is bust or stay
+                if (!CheckActivePlayers()) //if everyone busted, stayed, or someone won
                 {
-                    Player winner = StayScore();
+                    Player winner = StayScore(); // stayed winner with highest score wins
                     AnnounceWinner(winner);
                     DrawScoreButton.IsVisible = false;
                     StayScoreButton.IsVisible = false;
                     NextButton.IsVisible = true;
-                    break;
+                    break; // if not, breaks out of loop
                 }
             }
-            DrawCard.Text = "Do you want to draw a card " + players[count].Name + "?";
-            currentPlayer = 0;
-            while (currentPlayer < players.Count)
+            DrawCard.Text = "Do you want to draw a card " + players[count].Name + "?"; // asks current player if they want to draw a card
+            currentPlayer = 0; 
+            while (currentPlayer < players.Count) // goes through all the players with their name and updated scores
             {
 
                 PlayersNames1.Text = "Player 1 Name: " + players[currentPlayer].Name + "      Game Score: " + players[currentPlayer].score;
@@ -261,15 +260,15 @@ public partial class MainPage : ContentPage
                     }
                 }
             }
-            int winningIndex = Reached21();
+            int winningIndex = Reached21(); // if someone readches 21 we get their index in the list
             if (winningIndex != -1)
             {
-                AnnounceWinner(players[winningIndex]);
+                AnnounceWinner(players[winningIndex]); // announce that player as the winner
                 DrawScoreButton.IsVisible = false;
                 StayScoreButton.IsVisible = false;
                 NextButton.IsVisible = true;
             }
-            else
+            else // if no one reached 21, it will update to the next players
             {
                 currentPlayer++;
                 if (currentPlayer > players.Count - 1)
@@ -279,19 +278,19 @@ public partial class MainPage : ContentPage
                 nextTask = RaceTo21.Task.PlayerTurn;
             }
         }
-        else if (nextTask == RaceTo21.Task.GameOver)
+        else if (nextTask == RaceTo21.Task.GameOver) // when the game ends...
         {
-            DoFinalScoring();
+            DoFinalScoring(); // does the final scoring for everyone and announces winner
         }
-        else if (nextTask == RaceTo21.Task.Final)
+        else if (nextTask == RaceTo21.Task.Final) // the final task of the game when a player reaches the total winning score
         {
             NewRoundButton.IsVisible = true;
-            FinalTask();
+            FinalTask(); // calculates if anyone is the true winner!
 
         }
     }
 
-    public int Reached21()
+    public int Reached21() // if the player reaches the score of 21, their index will be returned
     {
         for (int i = 0; i < players.Count; i++)
         {
@@ -303,7 +302,7 @@ public partial class MainPage : ContentPage
         return -1;
     }
 
-    public void AnnounceWinner(Player player)
+    public void AnnounceWinner(Player player) // announces the winner
     {
         if (player != null)
         {
@@ -315,7 +314,7 @@ public partial class MainPage : ContentPage
         }
     }
 
-    public int ScoreHand(Player player)
+    public int ScoreHand(Player player) // scores tha hand of the player
     {
         int score = 0;
         foreach (Card card in player.cards)
@@ -340,12 +339,12 @@ public partial class MainPage : ContentPage
         return score;
     }
 
-    private void StartButton_Clicked(object sender, EventArgs e)
+    private void StartButton_Clicked(object sender, EventArgs e) // this button starts the game
     {
         DoNextTask();
     }
 
-    private void NumberPlayersButton_Clicked(object sender, EventArgs e)
+    private void NumberPlayersButton_Clicked(object sender, EventArgs e) // button to get number of players
     {
         response = NumberOfPlayers.Text;
         if (int.TryParse(response, out numOfPlayers) == false || numOfPlayers < 2 || numOfPlayers > 8) // if they type less than 2 or greater than 8, it will not run 
@@ -356,11 +355,11 @@ public partial class MainPage : ContentPage
         {
             finishedTask = true;
             nextTask = RaceTo21.Task.GetNames;
-            DoNextTask();
+            DoNextTask(); // goes to next task when done
         }
     }
 
-    private void NameButton_Clicked(object sender, EventArgs e)
+    private void NameButton_Clicked(object sender, EventArgs e) // button to get names of players
     {
         string PlayerName = NamesOfPlayers.Text;
         if (PlayerName == null)
@@ -373,20 +372,20 @@ public partial class MainPage : ContentPage
         }
         else
         {
-            players.Add(new Player(PlayerName));
+            players.Add(new Player(PlayerName)); // adds the players names into the player list
             InvalidName.IsVisible = false;
             NamesOfPlayers.Text = "";
-            count++;
-            if (numOfPlayers == count)
+            count++; // counts amount of times the button is pressed
+            if (numOfPlayers == count) // when the number of players and number of times the button was clicked is the same...
             {
                 finishedTask = true;
-                count = 0;
+                count = 0; // count is back to 0
                 nextTask = RaceTo21.Task.AgreedScore;
-                DoNextTask();
+                DoNextTask(); // goes to next task
             }
         }
     }
-    private void ScoreButton_Clicked(object sender, EventArgs e)
+    private void ScoreButton_Clicked(object sender, EventArgs e) // button for the total winning score
     {
         string response = TotalWinningScore.Text; // their input
         if (int.TryParse(response, out numResponse) == false || numResponse < 50 || numResponse > 500) // if they type less than 2 or greater than 8, it will not run 
@@ -396,37 +395,36 @@ public partial class MainPage : ContentPage
         else
         {
             InvalidScore.IsVisible = false;
-            intro++;
-            fullNumber += numResponse;
+            intro++; // when clicking the intro counter goes up 
+            fullNumber += numResponse; // everyone's number response gets added to a full number
             TotalWinningScore.Text = "";
-            count++;
-            if (players.Count == count)
+            count++; // counts amount of times the button is pressed
+            if (players.Count == count) 
             {
                 count = 0;
                 intro = 0;
-                winningScore = fullNumber / players.Count;
+                winningScore = fullNumber / players.Count; // gets the average of the total winning score
                 finishedTask = true;
                 nextTask = RaceTo21.Task.Intro;
-                DoNextTask();
+                DoNextTask(); // goes to next task
             }
             DoNextTask(); // goes back to do next task
         }
     }
 
-    private void NonScoreButton_Clicked(object sender, EventArgs e)
+    private void NonScoreButton_Clicked(object sender, EventArgs e) // button for getting first cards
     {
         nextTask = RaceTo21.Task.FirstTurn;
         DoNextTask();
-        //FirstCard();
     }
 
-    private void DrawScoreButton_Clicked(object sender, EventArgs e)
+    private void DrawScoreButton_Clicked(object sender, EventArgs e) // button for drawing
     {
 
-        Card card = deck.DealTopCard();
-        players[count].cards.Add(card);
-        players[count].score = ScoreHand(players[count]);
-        CorrectCards();
+        Card card = deck.DealTopCard(); // deals top card
+        players[count].cards.Add(card); // players get a card
+        players[count].score = ScoreHand(players[count]); // updates score
+        CorrectCards(); // shows the correct images of the cards that the players get
         if (players[count].score > 21)
         {
             players[count].status = PlayerStatus.bust;
@@ -453,21 +451,21 @@ public partial class MainPage : ContentPage
             winner.status = PlayerStatus.win; // wins the game                        
             previousWinner = winner; // keeps the winner in this variable
             NextButton.IsVisible = true;
-            nextTask = RaceTo21.Task.GameOver;
+            nextTask = RaceTo21.Task.GameOver; //if there is a winner, goes to game over...
         }
-        nextTask = RaceTo21.Task.PlayerTurn;
-        count = (count + 1) % players.Count;
+        nextTask = RaceTo21.Task.PlayerTurn; // ... and goes back to player turn if not
+        count = (count + 1) % players.Count; // to make sure that players are skipped correctly 
         DoNextTask();
     }
 
-    private void StayScoreButton_Clicked(object sender, EventArgs e)
+    private void StayScoreButton_Clicked(object sender, EventArgs e) // changes players status to stay
     {
         players[count].status = PlayerStatus.stay;
         nextTask = RaceTo21.Task.PlayerTurn;
-        count = (count + 1) % players.Count;
+        count = (count + 1) % players.Count; // makes sure that players are skipped correctly
         DoNextTask();
     }
-    private void NextButton_Clicked(object sender, EventArgs e)
+    private void NextButton_Clicked(object sender, EventArgs e) // goes to the game over task
     {
         DrawScoreButton.IsVisible = false;
         StayScoreButton.IsVisible = false;
@@ -476,7 +474,7 @@ public partial class MainPage : ContentPage
         DoNextTask();
     }
 
-    public bool CheckActivePlayers()
+    public bool CheckActivePlayers() // checks for active players
     {
         foreach (var player in players)
         {
@@ -499,7 +497,7 @@ public partial class MainPage : ContentPage
         FinalButton.IsVisible = true;
     }
 
-    public Player StayScore()
+    public Player StayScore() 
     {
         FinalTotalScore.IsVisible = true;
         int highScore = 0;
@@ -516,7 +514,7 @@ public partial class MainPage : ContentPage
         Player winner = players.Find(player => player.Score == highScore);
         return winner;
     }
-    public Player DoFinalScoring()
+    public Player DoFinalScoring() // does the final scoring for every player
     {
         FinalTotalScore.IsVisible = true;
         int highScore = 0;
@@ -543,7 +541,7 @@ public partial class MainPage : ContentPage
         return null; // everyone must have busted because nobody won!
     }
 
-    public void FinalTask() // created FinalTask() LEVEL2 on the homework pdf where: At end of round, each player is asked if they want to keep playing. If a player says no, they are removed from the player list. If only 1 player remains, that player is the winner(equivalent to everyone else “folding” in a card game)
+    public void FinalTask() // created FinalTask to announce who the true winner of the whole game is after multiple rounds
     {
         for (int i = 0; i < players.Count; i++)
         {
@@ -561,6 +559,13 @@ public partial class MainPage : ContentPage
     }
     public void winTheGame() // restarts the whole game after there is a true winner
     {
+        for (int i = 1; i <= players.Count; i++) // this was made to delete all of the cards images for new card images
+        {
+            var delete = this.FindByName($"Player{i}") as HorizontalStackLayout; // got inspired by Jay's MAUI no data binding example!
+            Microsoft.Maui.Controls.Label label = (Label)delete[0]; // stores the label in here
+            delete.Clear(); // clears everything
+            delete.Add(label); // adds the labels back
+        }
         currentPlayer = 0;
         winningScore = 0; // resets the winningScore
         players = new List<Player>(); // resets the list of players
@@ -569,7 +574,7 @@ public partial class MainPage : ContentPage
         NewgameButton.IsVisible = true;
     }
 
-    public void Restart() // made method Restart to refresh the player and deck when a new game starts
+    public void Restart() // made method Restart to refresh the player and deck when a new round starts
     {
         foreach (Player player in players)
         {
@@ -579,16 +584,16 @@ public partial class MainPage : ContentPage
         deck.Shuffle(); // shuffles deck
         Status.Text = "";
         count = 0;
-        for(int i = 1; i <= players.Count; i++)
+        for(int i = 1; i <= players.Count; i++) // this was made to delete all of the cards images for new card images
         {
-            var delete = this.FindByName($"Player{i}") as HorizontalStackLayout;
-            Microsoft.Maui.Controls.Label label = (Label)delete[0];
-            delete.Clear();
-            delete.Add(label);
+            var delete = this.FindByName($"Player{i}") as HorizontalStackLayout; // got inspired by Jay's MAUI no data binding example!
+            Microsoft.Maui.Controls.Label label = (Label)delete[0]; // stores the label in here
+            delete.Clear(); // clears everything
+            delete.Add(label); // adds the labels back
         }
     }
 
-    private void FinalButton_Clicked(object sender, EventArgs e)
+    private void FinalButton_Clicked(object sender, EventArgs e) // when this button is clicked, a lot of labels and buttons are removed
     {
         DrawCard.IsVisible = false;
         Status.IsVisible = false;
@@ -603,29 +608,42 @@ public partial class MainPage : ContentPage
         FinalTotalScore7.IsVisible = false;
         FinalTotalScore8.IsVisible = false;
         FinalButton.IsVisible = false;
-        nextTask = RaceTo21.Task.Final;
+        nextTask = RaceTo21.Task.Final; // goes to final
         DoNextTask();
     }
 
-    private void NewRoundButton_Clicked(object sender, EventArgs e)
+    private void NewRoundButton_Clicked(object sender, EventArgs e) // this button is clicked to start a new round
     {
-        Restart();
+        Restart(); // refreshes the new round
         NewRoundButton.IsVisible = false;
-        nextTask = RaceTo21.Task.FirstTurn;
+        nextTask = RaceTo21.Task.FirstTurn; // goes back to everyone getting their first cards
         DoNextTask();
     }
 
-    private void NewgameButton_Clicked(object sender, EventArgs e)
+    private void NewgameButton_Clicked(object sender, EventArgs e) // starts a new game
     {
-        nextTask = RaceTo21.Task.GetNumberOfPlayers;
+        Restart(); // restarts everything
+        TotalScore.IsVisible = false;
+        PlayersNames1.IsVisible = false;
+        PlayersNames2.IsVisible = false;    
+        PlayersNames3.IsVisible = false;
+        PlayersNames4.IsVisible = false;
+        PlayersNames5.IsVisible = false;
+        PlayersNames6.IsVisible = false;
+        PlayersNames7.IsVisible = false;
+        PlayersNames8.IsVisible = false;
+        FullWinningLabel.IsVisible = false;
+        NewgameButton.IsVisible = false;
+        gameLabel.IsVisible = true;
+        nextTask = RaceTo21.Task.GetNumberOfPlayers; // goes to number of players
         DoNextTask();
     }
 
-    public void CorrectCards()
+    public void CorrectCards() // this method was made to show the correct card images for every card drawn
     {
-        var addToMe = this.FindByName($"Player{count + 1}") as HorizontalStackLayout;
-        Card card = players[count].cards[players[count].cards.Count - 1];
-        switch (card.ID)
+        var addToMe = this.FindByName($"Player{count + 1}") as HorizontalStackLayout; // got inspired by Jay's MAUI no data binding example
+        Card card = players[count].cards[players[count].cards.Count - 1]; // card object that represents the players card that they got when drawing
+        switch (card.ID) // used switch to connect an image source to a card ID
         {
             case "AC":
                 addToMe.Add(new Microsoft.Maui.Controls.Image { Source = "card_clubs_A.png" });
@@ -785,7 +803,8 @@ public partial class MainPage : ContentPage
                 break;
         }
     }
-    public void FirstCard()
+
+    public void FirstCard() // this is to get the card image for everyone's first card
     {
         for (int i = 1; i <= players.Count; i++)
         {

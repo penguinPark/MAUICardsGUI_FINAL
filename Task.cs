@@ -10,10 +10,8 @@ namespace RaceTo21
 		Intro,
 		FirstTurn,
 		PlayerTurn,
-		CheckForEnd,
 		GameOver,
-		Final,
-		Continue,
+		Final, // when the player reaches the total winning score
 		Done // added Done to consider as the 'end of the game'
 	}
 }
